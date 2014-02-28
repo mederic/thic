@@ -7,17 +7,55 @@ import os
 import imp
 import sys
 
-
 class Test(object):
-    def __init__(self, device):
+
+    def __init__(self, test_package, device):
+        self.test_package = test_package
         self.device = device
+        self.screen_shot_id = 0
+        self.screen_shots = []
+        self.device_width = int(device.getProperty('display.width'))
+        self.device_height = int(device.getProperty('display.height'))
+
+    def context(self, str_value):
+        pass
+
+    def test(self, str_value):
+        pass
+
+    def expectation(self, str_value):
+        pass
+
+    def compare_screen(self, acceptance, x = 0, y = 0, w = 0, h = 0):
+        image = self.device.takeSnapshot()
+
+        if (w == 0):
+            w = self.device_width - x
+        if (h == 0):
+            h = self.device_height - y
+
+        image = image.getSubImage((x, y, w, h))
+
+        screen_shot = ScreenShot(self.screen_shot_id, acceptance, self)
+        image.writeToFile(screen_shot.get_candidate_path(), 'png')
+        self.screen_shots.append(screen_shot)
+        self.screen_shot_id += 1
 
 
-#parser = argparse.ArgumentParser(description='THIC - Test by Human Image Comparison')
-#parser.add_argument('-tp', '--tests-path', action="store", dest="tests_path", default=".", help='path to the folder containing the thic tests')
-#args = parser.parse_args()
+class ScreenShot(object):
+    def __init__(self, id, acceptance, test):
+        self.id = id
+        self.acceptance = acceptance
+        self.test = test
 
-tests_path = sys.argv[1]
+    def get_candidate_path(self):
+        picture_folder = self.test.test_package.get_picture_folder()
+        return os.path.join(picture_folder, 'tak' + str(self.id) + '.png')
+
+    def get_reference_path(self):
+        picture_folder = self.test.test_package.get_picture_folder()
+        return os.path.join(picture_folder, 'ref' + str(self.id) + '.png')
+
 
 class TestPackage(object):
     def __init__(self, path, name):
@@ -25,10 +63,18 @@ class TestPackage(object):
         self.name = name
 
     def get_test_file(self):
-        return os.path.join(self.path, self.name + ".py")
+        return os.path.join(self.path, self.name + '.py')
 
+    def get_picture_folder(self):
+        result = os.path.join(self.path, 'result');
+        if not os.path.exists(result):
+            os.makedirs(result)
+
+        return result
 
 def main():
+    tests_path = sys.argv[1]
+
     test_packages = []
     for test_name in os.listdir(tests_path):
         test_path = os.path.join(tests_path, test_name)
@@ -40,10 +86,31 @@ def main():
                     if os.path.exists(test_package.get_test_file()):
                         test_packages.append(test_package)
 
+    device = MonkeyRunner.waitForConnection()
 
     print "Test file detected count: " + str(len(test_packages))
     for test_package in test_packages:
-        imp.load_source(test_package.name, test_package.get_test_file())
+        module = imp.load_source(test_package.name, test_package.get_test_file())
+        loaded_class = getattr(module, test_package.name)
+        test_package.test = loaded_class(test_package, device)
+
+
+    print "Test is running..."
+    for test_package in test_packages:
+        test_package.test.run()
+
+
+    print "Start image comparison..."
+    for test_package in test_packages:
+        test = test_package.test
+        print test_package.name + " ---------------------"
+        for screen_shot in test.screen_shots:
+            candidate_path = screen_shot.get_candidate_path()
+            reference_path = screen_shot.get_reference_path()
+
+            print candidate_path
+            print reference_path
+
 
 
 def phase2():
@@ -51,6 +118,7 @@ def phase2():
         print "%s:\n   %s\n" % (m.__name__, dir(m))
     print "TODO"
 
+
 if __name__ == "__main__":
-    #main()
-    phase2()
+    main()
+    #phase2()
