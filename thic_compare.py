@@ -6,6 +6,7 @@ import imp
 import os
 import sys
 import pickle
+import shutil
 
 def main():
 
@@ -29,7 +30,6 @@ def main():
         print "Error retrieving saved file..."
     else:
         for test_package in test_packages:
-            print test_package.name
             test = test_package.test
             for screen_shot in test.screen_shots:
                 candidate_path = screen_shot.get_candidate_path()
@@ -37,11 +37,26 @@ def main():
                 if not screen_shot.is_the_same:
                     screen_shot.is_the_same = compare_humanly(reference_path, candidate_path);
 
+                if screen_shot.is_the_same:
+                    shutil.copy(candidate_path, reference_path)
+                else:
+                    test.is_ok = False
+
+
+
+        for test_package in test_packages:
+            test = test_package.test
+            if test.is_ok:
+                print "[OK] " + test_package.name
+            else:
+                print "[KO] " + test_package.name + " ======================="
+
+
     if os.path.exists(thic_core.TestPackage.PICKLE_FILE):
         os.remove(thic_core.TestPackage.PICKLE_FILE)
 
 def compare_humanly(image_path1, image_path2):
-    return True
+    return False
 
 
 if __name__ == "__main__":

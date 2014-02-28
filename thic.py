@@ -35,14 +35,17 @@ def main():
     for test_package in test_packages:
         test_package.test.run()
 
-    print "Start image comparison..."
+    print "Start image auto comparison..."
     for test_package in test_packages:
         test = test_package.test
         test.device = None
         for screen_shot in test.screen_shots:
             candidate_path = screen_shot.get_candidate_path()
             reference_path = screen_shot.get_reference_path()
-            screen_shot.is_the_same = compare_images(candidate_path, reference_path, screen_shot.acceptance)
+            if os.path.exists(reference_path):
+                screen_shot.is_the_same = compare_images(candidate_path, reference_path, screen_shot.acceptance)
+            else:
+                screen_shot.is_the_same = False
 
     out = open(thic_core.TestPackage.PICKLE_FILE, 'w')
     try:
@@ -52,7 +55,7 @@ def main():
 
 
 def compare_images(image_path1, image_path2, percent):
-    print "Comparing images: %s / %s  : %.2f" % (image_path1, image_path2, percent)
+    print "Comparison... " + str(percent)
     image1 = MonkeyRunner.loadImageFromFile(image_path1)
     image2 = MonkeyRunner.loadImageFromFile(image_path2)
     return image1.sameAs(image2, percent)

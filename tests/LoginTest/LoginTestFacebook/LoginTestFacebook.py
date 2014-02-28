@@ -12,4 +12,4 @@ class LoginTestFacebook(thic_core.Test):
         self.set_context('')
         self.set_test('')
         self.set_expectation('')
-        self.compare_screen(1)
+        self.compare_screen(0.8)
