@@ -47,9 +47,19 @@ def main():
 
 
 def phase2():
-    for m in [MonkeyRunner, MonkeyDevice, MonkeyImage]:
-        print "%s:\n   %s\n" % (m.__name__, dir(m))
-    print "TODO"
+    image_path1 = sys.argv[2]
+    image_path2 = sys.argv[3]
+    percent = float(sys.argv[4])
+    print("true" if compare_images(image_path1, image_path2, percent) else "false")
+
+
+def compare_images(image_path1, image_path2, percent):
+    print "Comparing images: %s / %s  : %.2f" % (image_path1, image_path2, percent)
+    image1 = MonkeyRunner.loadImageFromFile(image_path1)
+    image2 = MonkeyRunner.loadImageFromFile(image_path2)
+    return image1.sameAs(image2, percent)
+
+
 
 if __name__ == "__main__":
     #main()
