@@ -19,14 +19,18 @@ class Test(object):
         self.device_width = int(device.getProperty('display.width'))
         self.device_height = int(device.getProperty('display.height'))
 
-    def context(self, str_value):
-        pass
+        self.context = None
+        self.test = None
+        self.expectation = None
 
-    def test(self, str_value):
-        pass
+    def set_context(self, str_value):
+        self.context = str_value
 
-    def expectation(self, str_value):
-        pass
+    def set_test(self, str_value):
+        self.test = str_value
+
+    def set_expectation(self, str_value):
+        self.expectation = str_value
 
     def compare_screen(self, acceptance, x = 0, y = 0, w = 0, h = 0):
         image = self.device.takeSnapshot()
@@ -39,6 +43,7 @@ class Test(object):
         image = image.getSubImage((x, y, w, h))
 
         screen_shot = ScreenShot(self.screen_shot_id, acceptance, self)
+
         image.writeToFile(screen_shot.get_candidate_path(), 'png')
         self.screen_shots.append(screen_shot)
         self.screen_shot_id += 1
@@ -49,6 +54,9 @@ class ScreenShot(object):
         self.id = id
         self.acceptance = acceptance
         self.test = test
+        self.test_context = test.context
+        self.test_test = test.test
+        self.test_expectation = test.expectation
 
     def get_candidate_path(self):
         picture_folder = self.test.test_package.get_picture_folder()
@@ -111,10 +119,11 @@ def main():
             reference_path = screen_shot.get_reference_path()
 
             must_manually_compare = True
+            screen_shot.is_the_same = True
             if os.path.exists(reference_path):
                 must_manually_compare = not compare_images(candidate_path, reference_path, screen_shot.acceptance)
             if must_manually_compare:
-                compare_humanly(reference_path, candidate_path)
+                screen_shot.is_the_same = compare_humanly(reference_path, candidate_path)
 
 
 def compare_humanly(image_path1, image_path2):
