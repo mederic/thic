@@ -5,7 +5,9 @@ from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
 #import argparse
 import os
 import imp
-import sys
+import sys, Tkinter
+sys.modules['tkinter'] = Tkinter
+
 
 class Test(object):
 
@@ -116,6 +118,17 @@ def main():
 
 
 def compare_humanly(image_path1, image_path2):
+    root = Tkinter()
+    frame = Frame(root)
+    frame.pack()
+
+    root.button = Button(
+        frame, text="QUIT", fg="red", command=frame.quit
+        )
+    root.button.pack(side=LEFT)
+
+    root.hi_there = Button(frame, text="Hello", command=root.say_hi)
+    root.hi_there.pack(side=LEFT)
     return True
 
 
