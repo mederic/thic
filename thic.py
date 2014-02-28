@@ -31,11 +31,9 @@ def main():
         loaded_class = getattr(module, test_package.name)
         test_package.test = loaded_class(test_package, device)
 
-
     print "Test is running..."
     for test_package in test_packages:
         test_package.test.run()
-
 
     print "Start image comparison..."
     for test_package in test_packages:
@@ -52,16 +50,6 @@ def main():
     finally:
         out.close()
 
-def compare_humanly(image_path1, image_path2):
-    return True
-
-
-def phase2():
-    image_path1 = sys.argv[2]
-    image_path2 = sys.argv[3]
-    percent = float(sys.argv[4])
-    print("true" if compare_images(image_path1, image_path2, percent) else "false")
-
 
 def compare_images(image_path1, image_path2, percent):
     print "Comparing images: %s / %s  : %.2f" % (image_path1, image_path2, percent)
@@ -70,8 +58,5 @@ def compare_images(image_path1, image_path2, percent):
     return image1.sameAs(image2, percent)
 
 
-
-
 if __name__ == "__main__":
     main()
-    #phase2()

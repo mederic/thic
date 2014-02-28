@@ -11,7 +11,7 @@ def main():
 
     tests_path = sys.argv[1]
     test_packages = None
-    
+
     for test_name in os.listdir(tests_path):
         test_path = os.path.join(tests_path, test_name)
         if os.path.isdir(test_path):
@@ -35,8 +35,10 @@ def main():
                 candidate_path = screen_shot.get_candidate_path()
                 reference_path = screen_shot.get_reference_path()
                 if not screen_shot.is_the_same:
-                    compare_humanly(reference_path, candidate_path);
+                    screen_shot.is_the_same = compare_humanly(reference_path, candidate_path);
 
+    if os.path.exists(thic_core.TestPackage.PICKLE_FILE):
+        os.remove(thic_core.TestPackage.PICKLE_FILE)
 
 def compare_humanly(image_path1, image_path2):
     return True
