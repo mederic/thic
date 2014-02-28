@@ -108,9 +108,15 @@ def main():
             candidate_path = screen_shot.get_candidate_path()
             reference_path = screen_shot.get_reference_path()
 
-            print candidate_path
-            print reference_path
+            must_manually_compare = True
+            if os.path.exists(reference_path):
+                must_manually_compare = not compare_images(candidate_path, reference_path, screen_shot.acceptance)
+            if must_manually_compare:
+                compare_humanly(reference_path, candidate_path)
 
+
+def compare_humanly(image_path1, image_path2):
+    return True
 
 
 def phase2():
