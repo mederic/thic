@@ -1,5 +1,5 @@
-import thic
+import thic_core
 
-class SplashScreenTestMailLogged(thic.Test):
+class SplashScreenTestMailLogged(thic_core.Test):
     def run(self):
         print 'run'

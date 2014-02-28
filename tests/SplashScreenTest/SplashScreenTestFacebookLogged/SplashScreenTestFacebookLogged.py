@@ -1,5 +1,5 @@
-import thic
+import thic_core
 
-class SplashScreenTestFacebookLogged(thic.Test):
+class SplashScreenTestFacebookLogged(thic_core.Test):
     def run(self):
         print 'run'

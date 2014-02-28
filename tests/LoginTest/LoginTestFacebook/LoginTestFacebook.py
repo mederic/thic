@@ -1,6 +1,6 @@
-import thic
+import thic_core
 
-class LoginTestFacebook(thic.Test):
+class LoginTestFacebook(thic_core.Test):
     def run(self):
         
         self.set_context('Dans le ')

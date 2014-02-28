@@ -1,5 +1,5 @@
-import thic
+import thic_core
 
-class LoginTestMail(thic.Test):
+class LoginTestMail(thic_core.Test):
     def run(self):
         print 'run'
