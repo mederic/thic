@@ -2,6 +2,7 @@
 
 
 import thic_core
+import thic_gui
 import imp
 import os
 import sys
@@ -29,6 +30,10 @@ def main():
     if test_packages is None:
         print "Error retrieving saved file..."
     else:
+        app = thic_gui.ThicComparator(None, test_packages)
+        app.title('THIC - Tests by Human Image Comparison')
+        app.mainloop()
+
         for test_package in test_packages:
             test = test_package.test
             for screen_shot in test.screen_shots:
@@ -50,7 +55,6 @@ def main():
                 print "[OK] " + test_package.name
             else:
                 print "[KO] " + test_package.name + " ======================="
-
 
     if os.path.exists(thic_core.TestPackage.PICKLE_FILE):
         os.remove(thic_core.TestPackage.PICKLE_FILE)
