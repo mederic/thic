@@ -1,5 +1,24 @@
 import os
 
+
+class Hook(object):
+
+    def __init__(self, device):
+        self.device = device
+
+    def before_all(self):
+        pass
+
+    def after_all(self):
+        pass
+
+    def before(self):
+        pass
+
+    def after(self):
+        pass
+
+
 class Test(object):
 
     def __init__(self, test_package, device):
@@ -67,7 +86,6 @@ class TestPackage(object):
     def __init__(self, path, name):
         self.path = path
         self.name = name
-
     def get_test_file(self):
         return os.path.join(self.path, self.name + '.py')
 

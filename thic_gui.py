@@ -95,29 +95,32 @@ class ThicComparator(Tkinter.Tk):
         self.resize_images(event.width, event.height)
 
     def resize_images(self, max_width, max_height):
-        screen_shot = self.screen_to_compare[0]
-        reference_path = screen_shot.get_reference_path()
-        candidate_path = screen_shot.get_candidate_path()
+        if not self.screen_to_compare:
+            self.quit()
+        else:
+            screen_shot = self.screen_to_compare[0]
+            reference_path = screen_shot.get_reference_path()
+            candidate_path = screen_shot.get_candidate_path()
 
-        img = Image.open(reference_path)
+            img = Image.open(reference_path)
 
-        width = max_width
-        height = max_width * img.size[1] / img.size[0]
-        if height > max_height:
-            height = max_height
-            width = max_height * img.size[0] / img.size[1]
+            width = max_width
+            height = max_width * img.size[1] / img.size[0]
+            if height > max_height:
+                height = max_height
+                width = max_height * img.size[0] / img.size[1]
 
-        x_offset = max_width / 2
-        y_offset = max_height / 2
+            x_offset = max_width / 2
+            y_offset = max_height / 2
 
-        img = img.resize((width, height), Image.ANTIALIAS)
-        self.left_img = ImageTk.PhotoImage(img)
-        self.left_img_widget.create_image((x_offset, y_offset), image=self.left_img)
+            img = img.resize((width, height), Image.ANTIALIAS)
+            self.left_img = ImageTk.PhotoImage(img)
+            self.left_img_widget.create_image((x_offset, y_offset), image=self.left_img)
 
-        img = Image.open(candidate_path)
-        img = img.resize((width, height), Image.ANTIALIAS)
-        self.right_img = ImageTk.PhotoImage(img)
-        self.right_img_widget.create_image((x_offset, y_offset), image=self.right_img)
+            img = Image.open(candidate_path)
+            img = img.resize((width, height), Image.ANTIALIAS)
+            self.right_img = ImageTk.PhotoImage(img)
+            self.right_img_widget.create_image((x_offset, y_offset), image=self.right_img)
 
 
 
