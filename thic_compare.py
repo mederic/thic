@@ -39,11 +39,11 @@ def write_test(file, test_package):
         file.write('\n</div></td>')
 
         file.write('\n<td rowspan="3">')
-        file.write('\n<img src="../' + screen_shot.get_candidate_path())
+        file.write('\n<img src="' + screen_shot.get_candidate_path())
         file.write('"/>')
         file.write('\n</td>')
         file.write('\n<td rowspan="3">')
-        file.write('\n<img src="../' + screen_shot.get_reference_path())
+        file.write('\n<img src="' + screen_shot.get_reference_path())
         file.write('"/>')
         file.write('\n</td>')
 
