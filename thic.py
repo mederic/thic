@@ -46,7 +46,7 @@ def main():
         for test_package in test_package_list:
             module = imp.load_source(test_package.name, test_package.get_test_file())
             loaded_class = getattr(module, test_package.name)
-            test_package.test = loaded_class(test_package, device)
+            test_package.test = loaded_class(test_package, device, MonkeyRunner)
 
     print "Test is running..."
 
@@ -67,6 +67,7 @@ def main():
             if test_package_list_key in test_hooks and not test_hooks[test_package_list_key] is None:
                 test_hooks[test_package_list_key].before()
 
+            print test_package.name + " ~~~~~~~~~~~~~~~~~~"
             test_package.test.run()
 
             if test_package_list_key in test_hooks and not test_hooks[test_package_list_key] is None:
@@ -86,6 +87,7 @@ def main():
     for test_package in test_packages:
         test = test_package.test
         test.device = None
+        test.monkey_runner = None
         for screen_shot in test.screen_shots:
             candidate_path = screen_shot.get_candidate_path()
             reference_path = screen_shot.get_reference_path()

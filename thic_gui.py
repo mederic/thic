@@ -1,6 +1,7 @@
 import Tkinter
 import tkFont
 import Image, ImageTk
+import os
 
 class ThicComparator(Tkinter.Tk):
 
@@ -18,6 +19,9 @@ class ThicComparator(Tkinter.Tk):
         self.screen_to_compare_count = len(self.screen_to_compare)
         self.initialize()
         self.compare_next()
+
+        self.left_img = None
+        self.right_img = None
 
     def initialize(self):
         font = tkFont.Font(family="Helvetica", size=18, weight='bold')
@@ -102,7 +106,8 @@ class ThicComparator(Tkinter.Tk):
             reference_path = screen_shot.get_reference_path()
             candidate_path = screen_shot.get_candidate_path()
 
-            img = Image.open(reference_path)
+
+            img = Image.open(candidate_path)
 
             width = max_width
             height = max_width * img.size[1] / img.size[0]
@@ -114,13 +119,16 @@ class ThicComparator(Tkinter.Tk):
             y_offset = max_height / 2
 
             img = img.resize((width, height), Image.ANTIALIAS)
-            self.left_img = ImageTk.PhotoImage(img)
-            self.left_img_widget.create_image((x_offset, y_offset), image=self.left_img)
-
-            img = Image.open(candidate_path)
-            img = img.resize((width, height), Image.ANTIALIAS)
             self.right_img = ImageTk.PhotoImage(img)
             self.right_img_widget.create_image((x_offset, y_offset), image=self.right_img)
+
+            if not os.path.exists(reference_path):
+                self.left_img = None
+            else:
+                img = Image.open(reference_path)
+                img = img.resize((width, height), Image.ANTIALIAS)
+                self.left_img = ImageTk.PhotoImage(img)
+                self.left_img_widget.create_image((x_offset, y_offset), image=self.left_img)
 
 
 

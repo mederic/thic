@@ -1,6 +1,5 @@
 import os
 
-
 class Hook(object):
 
     def __init__(self, device):
@@ -21,9 +20,10 @@ class Hook(object):
 
 class Test(object):
 
-    def __init__(self, test_package, device):
+    def __init__(self, test_package, device, monkey_runner):
         self.test_package = test_package
         self.device = device
+        self.monkey_runner = monkey_runner
         self.screen_shot_id = 0
         self.screen_shots = []
         self.device_width = int(device.getProperty('display.width'))
@@ -43,6 +43,9 @@ class Test(object):
 
     def set_expectation(self, str_value):
         self.expectation = str_value
+
+    def sleep(self, seconds):
+        self.monkey_runner.sleep(seconds)
 
     def compare_screen(self, acceptance, x = 0, y = 0, w = 0, h = 0):
         image = self.device.takeSnapshot()
